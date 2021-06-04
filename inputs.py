@@ -8,6 +8,11 @@ import numpy as np
 ###############################################################################
 # Cosmology
 ###############################################################################
+'''
+Check CosmoloPy documentation for understanding the names of cosmological parameters
+LINK:  https://roban.github.io/CosmoloPy/
+'''
+
 h=0.69
 ns=0.9667
 s8=0.8
@@ -35,6 +40,7 @@ z_re=7.5  # redshift of reionization ( when xe=0.5)
 delta_z=2 #duration of reionization
 
 reio_file_name=None 
+#reio_file_name='/Users/anirbanroy/Documents/Tauspec/xe.dat'
 
 ###############################################################################
 # Patchy Reionization Model
@@ -54,7 +60,7 @@ cltau: optical depth power spectrum
 xe: ionization power spectrum
 '''
 
-write_output=False
+write_output=True
 output= {'pxe', 'cltau', 'xe'}
 #if output pxe, mention z_pxe (scalar) and k_pxe (array) range
 z_pxe= None

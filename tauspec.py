@@ -32,7 +32,7 @@ R_int_max=500 #Mpc\
 zint_min=5
 zint_max=20
 
-# Read parameters
+#Read parameters from input file
 Rb=inp.Rb
 sigma_lnr=inp.sigma_lnr
 b=inp.b
@@ -120,6 +120,9 @@ def Fv(k):
 F=np.vectorize(Fv)
 
 def G(k,z):
+    '''Approximation used. Eq. (35) of the paper:
+       https://arxiv.org/pdf/astro-ph/0511141.pdf
+    '''
     mpk_at_z=mpk(k,z)
     sigma_r_square=lambda z: cp.sigma_r(Rb, z, **cosmo)[0]
     V_times_sigma=V_av() * sigma_r_square(z)
@@ -144,11 +147,11 @@ def cltau(ell):
     kmat=ellmat.T/chiarr
     #pxe=p_xexe(chiarr,kmat,Rb, sigma_lnr,b)
     int_mat=((sigma_t*np0)**2/(chiarr**2*a(chiarr)**4))*p_xexe_chi(chiarr,kmat)
- 
     res=simps(int_mat,chiarr,axis=1)
     return res
     
 
+# save outputs in files as mentioned in the input file. 
 def return_output(output):
     if 'pxe' in output:
         if z_pxe is None:
