@@ -20,6 +20,7 @@ np0=0.22*(3.086e+22)**3
 sigma_t=6.652e-29/(3.086e+22)**2  #MPc^2
 sigmat_times_np0_square=(sigma_t*np0)**2
 pi=np.pi
+k_bi_mec2=1.689e-10 #K^{-1}
 
 #reion params
 reio_model=inp.reio_model
@@ -54,16 +55,36 @@ z0=np.logspace(np.log10(zint_min),np.log10(zint_max),num=100)
 chi0=chi(z0)
 
 
+
+
+z_int_min=5.0
+z_int_max=13.0
+
 def z_for_chi(chi_input):
     return np.interp(chi_input, chi0,z0)
- 
-#scale factor
+    
 def a(chi):
     return np.interp(chi, chi0,(1.0+z0)**(-1))
- 
-# Matter power spectra
+    
 def mpk(k,z):
     return cp.power_spectrum(k,z,**cosmo)
+
+    
+chi_min_integ=chi(z_int_min)
+chi_max_integ=chi(z_int_max)
+
+
+# Temperature as defined in input file. For simplicity we consider constant temperature
+#during EoR
+
+def te(z): 
+    te=inp.T0
+    return te
+
+def te_chi(chi):
+    return inp.T0
+
+
 
 # ionization fraction
 def xe(z):
@@ -150,6 +171,20 @@ def cltau(ell):
     res=simps(int_mat,chiarr,axis=1)
     return res
     
+
+def Cltauy(ell):
+    chiarr=np.logspace(np.log10(int(chi_min_integ+1)),np.log10(int(chi_max_integ-1)),num=50)
+    chi_len=len(chiarr)
+    ellmat=np.tile(ell,(chi_len,1))
+    kmat=ellmat.T/chiarr
+    
+    int_mat=(k_bi_mec2*(sigma_t*np0)**2/(chiarr**2*a(chiarr)**4))*p_xexe_chi(chiarr,kmat)*te_chi(chiarr)
+    #print "shape of int_mat", np.shape(int_mat)
+    
+    res=simps(int_mat,chiarr,axis=1)
+    return res
+    
+
 
 # save outputs in files as mentioned in the input file. 
 def return_output(output):

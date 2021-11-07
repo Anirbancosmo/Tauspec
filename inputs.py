@@ -49,6 +49,7 @@ reio_file_name=None
 Rb = 5 #characteristic bubble size (Mpc)
 sigma_lnr= np.log(2) #bubble size distribution
 b = 6 # linar bias 
+T0 = 2e4  # in Kelvin
 
 ###############################################################################
 # Output
